@@ -16,7 +16,7 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from core import views
 
 urlpatterns = [
@@ -25,4 +25,5 @@ urlpatterns = [
     path('practice/', views.practice, name='practice'),
     path('api/question/', views.get_question, name='get_question'),
     path('api/check-answer/', views.check_answer, name='check_answer'),
+    path('accounts/', include('django.contrib.auth.urls')),  # Giriş/çıkış URL'leri
 ]

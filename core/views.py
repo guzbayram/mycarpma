@@ -4,24 +4,37 @@ from django.contrib.auth.decorators import login_required
 from .models import MultiplicationQuestion, UserProgress
 import random
 from datetime import datetime, timedelta
+import json
 
-def get_next_question(user):
+def get_next_question(user, operation_type="multiplication"):
     """
-    Anki algoritmasına göre bir sonraki soruyu seç
-    Select next question based on Anki algorithm
+    Seçilen işlem türüne göre soru üret
+    Generate question based on selected operation type
     """
-    # Yanlış cevaplanan sorulara öncelik ver / Prioritize wrong answers
-    wrong_questions = UserProgress.objects.filter(
-        user=user,
-        wrong_count__gt=0
-    ).order_by('-wrong_count')
+    if operation_type == "multiplication":
+        # Çarpma işlemi için 1-9 arası sayılar
+        number1 = random.randint(1, 9)
+        number2 = random.randint(1, 9)
+    elif operation_type == "division":
+        # Bölme işlemi için tam bölünen sayılar
+        divisor = random.randint(2, 9)
+        result = random.randint(1, 9)
+        number1 = divisor * result
+        number2 = divisor
+    elif operation_type == "addition":
+        # Toplama işlemi için 0-9 arası
+        number1 = random.randint(0, 9)
+        number2 = random.randint(0, 9)
+    else:  # subtraction
+        # Çıkarma işlemi için pozitif sonuç verecek sayılar
+        number1 = random.randint(1, 9)
+        number2 = random.randint(0, number1)
     
-    if wrong_questions.exists():
-        return wrong_questions.first().question
-    
-    # Yeni veya az görülen soruları seç / Select new or less seen questions
-    questions = MultiplicationQuestion.objects.all()
-    return random.choice(questions)
+    return {
+        'number1': number1,
+        'number2': number2,
+        'operation': operation_type  # İşlem türünü geri gönder
+    }
 
 def home(request):
     """
@@ -44,12 +57,18 @@ def get_question(request):
     AJAX ile yeni soru al
     Get new question via AJAX
     """
-    question = get_next_question(request.user)
-    return JsonResponse({
-        'number1': question.number1,
-        'number2': question.number2,
-        'id': question.id
-    })
+    operation_type = request.GET.get('operation', 'multiplication')
+    question = get_next_question(request.user, operation_type)
+    
+    if isinstance(question, MultiplicationQuestion):
+        return JsonResponse({
+            'number1': question.number1,
+            'number2': question.number2,
+            'operation': 'multiplication',
+            'id': question.id
+        })
+    else:
+        return JsonResponse(question)
 
 @login_required
 def check_answer(request):
@@ -57,33 +76,35 @@ def check_answer(request):
     AJAX ile cevap kontrolü
     Check answer via AJAX
     """
-    question_id = request.POST.get('question_id')
-    user_answer = request.POST.get('answer')
-    
-    question = MultiplicationQuestion.objects.get(id=question_id)
-    correct_answer = question.number1 * question.number2
-    
-    progress, created = UserProgress.objects.get_or_create(
-        user=request.user,
-        question=question
-    )
-    
-    is_correct = int(user_answer) == correct_answer
-    
-    if is_correct:
-        progress.correct_count += 1
-        # Doğru cevap için bir sonraki tekrar süresini artır
-        # Increase next review time for correct answer
-        progress.next_review = datetime.now() + timedelta(days=progress.correct_count)
-    else:
-        progress.wrong_count += 1
-        # Yanlış cevap için hemen tekrar göster
-        # Show immediately for wrong answer
-        progress.next_review = datetime.now()
-    
-    progress.save()
-    
-    return JsonResponse({
-        'correct': is_correct,
-        'correct_answer': correct_answer
-    })
+    try:
+        data = json.loads(request.body)
+        operation = data.get('operation', 'multiplication')
+        user_answer = int(data.get('answer'))
+        number1 = int(data.get('number1'))
+        number2 = int(data.get('number2'))
+        
+        # İşleme göre doğru cevabı hesapla
+        if operation == 'multiplication':
+            correct_answer = number1 * number2
+        elif operation == 'division':
+            correct_answer = int(number1 / number2)  # Tam sayı bölme sonucu
+        elif operation == 'addition':
+            correct_answer = number1 + number2
+        else:  # subtraction
+            correct_answer = number1 - number2
+        
+        # Debug bilgisi ekle
+        debug_info = {
+            'correct': user_answer == correct_answer,
+            'correct_answer': correct_answer,
+            'user_answer': user_answer,
+            'operation': operation,
+            'number1': number1,
+            'number2': number2
+        }
+        
+        return JsonResponse(debug_info)
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=400)

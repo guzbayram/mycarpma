@@ -1,61 +1,251 @@
-{% extends 'core/base.html' %} {% block title %}Ana Sayfa - Çarpım Tablosu{%
-endblock %} {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-8 text-center">
-    <h1 class="mb-4">Çarpım Tablosu Alıştırması</h1>
-    <p class="lead mb-4">Çarpım tablosunu eğlenceli bir şekilde öğrenin!</p>
-
-    <div class="card bg-dark text-light mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Süre Seçin</h5>
-        <div class="d-flex justify-content-center gap-3 mt-3">
-          <a
-            href="{% url 'practice' %}?duration=30"
-            class="btn btn-outline-light"
-            >30 Saniye</a
-          >
-          <a
-            href="{% url 'practice' %}?duration=60"
-            class="btn btn-outline-light"
-            >60 Saniye</a
-          >
-          <a
-            href="{% url 'practice' %}?duration=0"
-            class="btn btn-outline-light"
-            >Süresiz</a
-          >
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card bg-dark text-light mb-3">
-          <div class="card-body">
-            <h5 class="card-title">Nasıl Çalışır?</h5>
-            <ul class="text-start">
-              <li>İstediğiniz süreyi seçin</li>
-              <li>Soruları cevaplayın</li>
-              <li>Yanlış cevaplar tekrar sorulur</li>
-              <li>Doğru cevaplarınızı takip edin</li>
-            </ul>
+{% extends 'core/base.html' %} {% block title %}Çarpım Tablosu{% endblock %} 
+{% block content %}
+<div class="row g-4">
+  <!-- Sol taraf - Ana Menü -->
+  <div class="col-md-6">
+    <div class="app-container h-100">
+      <div class="mode-grid">
+        <div class="mode-section">
+          <div class="mode-row">
+            <button class="mode-button active" data-operation="multiplication">
+              <i class="fas fa-times"></i>
+              <span>Çarpma</span>
+            </button>
+            <button class="mode-button" data-operation="division">
+              <i class="fas fa-divide"></i>
+              <span>Bölme</span>
+            </button>
+          </div>
+          <div class="mode-row">
+            <button class="mode-button" data-operation="addition">
+              <i class="fas fa-plus"></i>
+              <span>Toplama</span>
+            </button>
+            <button class="mode-button" data-operation="subtraction">
+              <i class="fas fa-minus"></i>
+              <span>Çıkarma</span>
+            </button>
           </div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card bg-dark text-light mb-3">
-          <div class="card-body">
-            <h5 class="card-title">Özellikler</h5>
-            <ul class="text-start">
-              <li>Anki benzeri tekrar sistemi</li>
-              <li>Çin yöntemi ile öğrenme</li>
-              <li>Anlık geri bildirim</li>
-              <li>İlerleme takibi</li>
-            </ul>
+
+        <div class="timer-section">
+          <div class="timer-row">
+            <button class="timer-button" data-duration="0">
+              <i class="fas fa-infinity"></i>
+              <span>Süresiz</span>
+            </button>
+            <button class="timer-button active" data-duration="30">
+              <i class="fas fa-clock"></i>
+              <span>30 Saniye</span>
+            </button>
+          </div>
+          <div class="timer-row">
+            <button class="timer-button" data-duration="60">
+              <i class="fas fa-hourglass"></i>
+              <span>60 Saniye</span>
+            </button>
           </div>
         </div>
+
+        <div class="stats-section">
+          <div class="stats-row">
+            <div class="stats-item">
+              <i class="fas fa-question text-primary"></i>
+              <div class="stats-content">
+                <span class="stats-value">0</span>
+                <span class="stats-label">Toplam Soru</span>
+              </div>
+            </div>
+            <div class="stats-item">
+              <i class="fas fa-check text-success"></i>
+              <div class="stats-content">
+                <span class="stats-value">0</span>
+                <span class="stats-label">Doğru</span>
+              </div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <div class="stats-item">
+              <i class="fas fa-times text-danger"></i>
+              <div class="stats-content">
+                <span class="stats-value">0</span>
+                <span class="stats-label">Yanlış</span>
+              </div>
+            </div>
+            <div class="stats-item">
+              <i class="fas fa-chart-line text-warning"></i>
+              <div class="stats-content">
+                <span class="stats-value">%0</span>
+                <span class="stats-label">Başarı</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button id="startButton" class="start-button">
+          <i class="fas fa-play"></i>
+          Oyunu Başlat
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Sağ taraf - Alıştırma -->
+  <div class="col-md-6">
+    <div id="practiceContainer" class="h-100">
+      {% include 'core/practice.html' %}
+    </div>
+  </div>
 </div>
+{% endblock %} {% block extra_css %}
+<style>
+  .app-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .mode-grid {
+    background: #1e1e2e;
+    border-radius: 20px;
+    padding: 20px;
+    height: 100%;
+  }
+
+  .mode-section,
+  .timer-section,
+  .stats-section {
+    margin-bottom: 25px;
+  }
+
+  .mode-row,
+  .timer-row,
+  .stats-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .mode-button,
+  .timer-button {
+    flex: 1;
+    background: #2d2d3f;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .mode-button.active,
+  .timer-button.active {
+    background: #6c5ce7;
+  }
+
+  .mode-button i,
+  .timer-button i {
+    font-size: 24px;
+  }
+
+  .stats-item {
+    flex: 1;
+    background: #2d2d3f;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .stats-item i {
+    font-size: 24px;
+  }
+
+  .stats-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stats-value {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .stats-label {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  .start-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #6c5ce7;
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .start-button:hover {
+    background: #5b4bd4;
+    color: white;
+  }
+</style>
+{% endblock %} {% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let selectedOperation = "multiplication";
+    let selectedDuration = 30;
+    let practiceInstance = null;
+
+    // İşlem seçimi
+    document.querySelectorAll(".mode-button").forEach((button) => {
+      button.addEventListener("click", function () {
+        document
+          .querySelectorAll(".mode-button")
+          .forEach((b) => b.classList.remove("active"));
+        this.classList.add("active");
+        selectedOperation = this.dataset.operation;
+        // İşlem değiştiğinde yeni oturum başlatalım
+        practiceInstance = initPractice(selectedOperation, selectedDuration);
+      });
+    });
+
+    // Timer seçimi
+    document.querySelectorAll(".timer-button").forEach((button) => {
+      button.addEventListener("click", function () {
+        document
+          .querySelectorAll(".timer-button")
+          .forEach((b) => b.classList.remove("active"));
+        this.classList.add("active");
+        selectedDuration = parseInt(this.dataset.duration);
+      });
+    });
+
+    // Başlat butonu
+    document
+      .getElementById("startButton")
+      .addEventListener("click", function () {
+        practiceInstance = initPractice(selectedOperation, selectedDuration);
+      });
+
+    // Sayfa yüklendiğinde ilk pratik oturumunu başlatalım
+    practiceInstance = initPractice(selectedOperation, selectedDuration);
+  });
+</script>
 {% endblock %}
