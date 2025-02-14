@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %} {% block title %}Ana Sayfa - Çarpım Tablosu{%
+endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 text-center">
+    <h1 class="mb-4">Çarpım Tablosu Alıştırması</h1>
+    <p class="lead mb-4">Çarpım tablosunu eğlenceli bir şekilde öğrenin!</p>
+
+    <div class="card bg-dark text-light mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Süre Seçin</h5>
+        <div class="d-flex justify-content-center gap-3 mt-3">
+          <a
+            href="{% url 'practice' %}?duration=30"
+            class="btn btn-outline-light"
+            >30 Saniye</a
+          >
+          <a
+            href="{% url 'practice' %}?duration=60"
+            class="btn btn-outline-light"
+            >60 Saniye</a
+          >
+          <a
+            href="{% url 'practice' %}?duration=0"
+            class="btn btn-outline-light"
+            >Süresiz</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card bg-dark text-light mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Nasıl Çalışır?</h5>
+            <ul class="text-start">
+              <li>İstediğiniz süreyi seçin</li>
+              <li>Soruları cevaplayın</li>
+              <li>Yanlış cevaplar tekrar sorulur</li>
+              <li>Doğru cevaplarınızı takip edin</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card bg-dark text-light mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Özellikler</h5>
+            <ul class="text-start">
+              <li>Anki benzeri tekrar sistemi</li>
+              <li>Çin yöntemi ile öğrenme</li>
+              <li>Anlık geri bildirim</li>
+              <li>İlerleme takibi</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

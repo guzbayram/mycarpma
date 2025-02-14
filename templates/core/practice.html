@@ -1,0 +1,183 @@
+{% extends 'core/base.html' %} {% block title %}Alıştırma - Çarpım Tablosu{%
+endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <div class="timer mb-4" id="timer"></div>
+
+    <div class="score mb-4">
+      <span class="correct">Doğru: <span id="correct-count">0</span></span>
+      <span class="mx-3">|</span>
+      <span class="wrong">Yanlış: <span id="wrong-count">0</span></span>
+    </div>
+
+    <div class="question-display" id="question-display">
+      <span id="number1">?</span> × <span id="number2">?</span> = ?
+    </div>
+
+    <input type="text" class="answer-input" id="answer-display" readonly />
+
+    <div class="calculator-keypad">
+      <div class="d-flex justify-content-center mb-2">
+        <button class="calculator-key" data-key="7">7</button>
+        <button class="calculator-key" data-key="8">8</button>
+        <button class="calculator-key" data-key="9">9</button>
+      </div>
+      <div class="d-flex justify-content-center mb-2">
+        <button class="calculator-key" data-key="4">4</button>
+        <button class="calculator-key" data-key="5">5</button>
+        <button class="calculator-key" data-key="6">6</button>
+      </div>
+      <div class="d-flex justify-content-center mb-2">
+        <button class="calculator-key" data-key="1">1</button>
+        <button class="calculator-key" data-key="2">2</button>
+        <button class="calculator-key" data-key="3">3</button>
+      </div>
+      <div class="d-flex justify-content-center">
+        <button class="calculator-key" data-key="0">0</button>
+        <button class="calculator-key" data-key="clear">C</button>
+        <button class="calculator-key" data-key="enter">↵</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let currentQuestion = null;
+    let answer = "";
+    let correctCount = 0;
+    let wrongCount = 0;
+    let timeLeft = null;
+    let timerInterval = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const duration = parseInt(urlParams.get("duration")) || 0;
+
+    if (duration > 0) {
+      timeLeft = duration;
+      updateTimer();
+      startTimer();
+    } else {
+      document.getElementById("timer").textContent = "Süresiz Mod";
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimer();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          endPractice();
+        }
+      }, 1000);
+    }
+
+    function updateTimer() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById("timer").textContent = `${minutes}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
+    }
+
+    function endPractice() {
+      alert(`Süre doldu!\nDoğru: ${correctCount}\nYanlış: ${wrongCount}`);
+      window.location.href = "/";
+    }
+
+    function getNewQuestion() {
+      fetch("/api/question/")
+        .then((response) => response.json())
+        .then((data) => {
+          currentQuestion = data;
+          document.getElementById("number1").textContent = data.number1;
+          document.getElementById("number2").textContent = data.number2;
+          answer = "";
+          updateDisplay();
+        });
+    }
+
+    function updateDisplay() {
+      document.getElementById("answer-display").value = answer;
+    }
+
+    function checkAnswer() {
+      if (!answer) return;
+
+      fetch("/api/check-answer/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({
+          question_id: currentQuestion.id,
+          answer: answer,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.correct) {
+            correctCount++;
+            document.getElementById("correct-count").textContent = correctCount;
+          } else {
+            wrongCount++;
+            document.getElementById("wrong-count").textContent = wrongCount;
+          }
+          getNewQuestion();
+        });
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    document.querySelectorAll(".calculator-key").forEach((key) => {
+      key.addEventListener("click", () => {
+        const value = key.dataset.key;
+
+        if (value === "clear") {
+          answer = "";
+        } else if (value === "enter") {
+          checkAnswer();
+        } else {
+          if (answer.length < 3) {
+            // Max 3 basamak
+            answer += value;
+          }
+        }
+
+        updateDisplay();
+      });
+    });
+
+    // Klavye desteği
+    document.addEventListener("keydown", (e) => {
+      if (e.key >= "0" && e.key <= "9" && answer.length < 3) {
+        answer += e.key;
+        updateDisplay();
+      } else if (e.key === "Enter") {
+        checkAnswer();
+      } else if (e.key === "Backspace") {
+        answer = answer.slice(0, -1);
+        updateDisplay();
+      }
+    });
+
+    // İlk soruyu al
+    getNewQuestion();
+  });
+</script>
+{% endblock %}
