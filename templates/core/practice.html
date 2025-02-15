@@ -302,8 +302,17 @@
 
     function getNewQuestion() {
       fetch(`/api/question/?operation=${currentOperation}`)
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
         .then((data) => {
+          if (data.error) {
+            console.error("Hata:", data.error);
+            return;
+          }
           currentQuestion = data;
           document.getElementById("number1").textContent = data.number1;
           document.getElementById("number2").textContent = data.number2;
@@ -315,6 +324,8 @@
         })
         .catch((error) => {
           console.error("Hata:", error);
+          document.getElementById("number1").textContent = "?";
+          document.getElementById("number2").textContent = "?";
         });
     }
 
@@ -350,12 +361,21 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
         },
         body: JSON.stringify(requestData),
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
         .then((data) => {
+          if (data.error) {
+            console.error("Hata:", data.error);
+            return;
+          }
+
           const resultMessage = document.getElementById("result-message");
           const answerInput = document.getElementById("answer-input");
 
@@ -368,7 +388,8 @@
           } else {
             wrongCount++;
             document.getElementById("wrong-count").textContent = wrongCount;
-            resultMessage.textContent = "Yanlış!: " + data.correct_answer;
+            resultMessage.textContent =
+              "Yanlış! Doğru cevap: " + data.correct_answer;
             resultMessage.style.color = "#f44336";
             answerInput.style.borderColor = "#f44336";
           }
@@ -382,7 +403,7 @@
             if (!window.gameEnded) {
               getNewQuestion();
             }
-          }, 100);
+          }, 750);
         })
         .catch((error) => {
           console.error("Hata:", error);
@@ -390,21 +411,6 @@
             getNewQuestion();
           }
         });
-    }
-
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === name + "=") {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
     }
 
     const answerInput = document.getElementById("answer-input");

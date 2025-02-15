@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from .models import MultiplicationQuestion, UserProgress
 import random
 from datetime import datetime, timedelta
@@ -43,7 +44,6 @@ def home(request):
     """
     return render(request, 'core/home.html')
 
-@login_required
 def practice(request):
     """
     Alıştırma sayfası görünümü
@@ -51,26 +51,30 @@ def practice(request):
     """
     return render(request, 'core/practice.html')
 
-@login_required
+@csrf_exempt
 def get_question(request):
     """
     AJAX ile yeni soru al
     Get new question via AJAX
     """
-    operation_type = request.GET.get('operation', 'multiplication')
-    question = get_next_question(request.user, operation_type)
-    
-    if isinstance(question, MultiplicationQuestion):
+    try:
+        operation_type = request.GET.get('operation', 'multiplication')
+        question = get_next_question(request.user, operation_type)
+        
+        response_data = {
+            'number1': question['number1'],
+            'number2': question['number2'],
+            'operation': question['operation']
+        }
+        
+        return JsonResponse(response_data)
+    except Exception as e:
         return JsonResponse({
-            'number1': question.number1,
-            'number2': question.number2,
-            'operation': 'multiplication',
-            'id': question.id
-        })
-    else:
-        return JsonResponse(question)
+            'error': str(e),
+            'status': 'error'
+        }, status=500)
 
-@login_required
+@csrf_exempt
 def check_answer(request):
     """
     AJAX ile cevap kontrolü
@@ -106,5 +110,6 @@ def check_answer(request):
         return JsonResponse(debug_info)
     except Exception as e:
         return JsonResponse({
-            'error': str(e)
+            'error': str(e),
+            'status': 'error'
         }, status=400)
