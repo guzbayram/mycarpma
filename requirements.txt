@@ -1,0 +1,6 @@
+Django==4.2.19  # Django web framework
+django-pwa==2.0.1  # Progressive Web App desteği
+python-dotenv==1.0.1  # Ortam değişkenleri için
+asgiref==3.8.1  # ASGI spesifikasyonu için
+sqlparse==0.5.3  # SQL ayrıştırma için
+typing-extensions==4.12.2  # Tip desteği için 

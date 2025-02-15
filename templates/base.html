@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Math Uygulaması{% endblock %}</title>
 
-    <!-- PWA Meta Etiketleri - Geçici olarak devre dışı bırakıldı -->
-    {% comment %} {% load pwa %} {% progressive_web_app_meta %} {% endcomment %}
+    <!-- PWA Meta Etiketleri -->
+    {% load pwa %} {% progressive_web_app_meta %}
 
     <!-- CSS ve diğer head içeriği -->
     {% block extra_head %}{% endblock %}
@@ -14,8 +14,7 @@
   <body>
     {% block content %}{% endblock %}
 
-    <!-- Service Worker Kaydı - Geçici olarak devre dışı bırakıldı -->
-    {% comment %}
+    <!-- Service Worker Kaydı -->
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -30,6 +29,6 @@
         });
       }
     </script>
-    {% endcomment %} {% block extra_js %}{% endblock %}
+    {% block extra_js %}{% endblock %}
   </body>
 </html>

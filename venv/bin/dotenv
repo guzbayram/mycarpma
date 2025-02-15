@@ -1,4 +1,4 @@
-#!/Users/bayramguz/Documents/benimUygulamalarım/matUygulamalari/myCarpma/venv/bin/python3
+#!/Users/bayramguz/Documents/benimUygulamalarım/matUygulamalari/myCarpma/venv/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys

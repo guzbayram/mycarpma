@@ -26,5 +26,5 @@ urlpatterns = [
     path('api/question/', views.get_question, name='get_question'),
     path('api/check-answer/', views.check_answer, name='check_answer'),
     path('accounts/', include('django.contrib.auth.urls')),  # Giriş/çıkış URL'leri
-    # path('', include('django_pwa.urls')),  # PWA URL'leri - Geçici olarak devre dışı bırakıldı
+    # path('', include('django_pwa.urls')),  # PWA URL'leri geçici olarak devre dışı
 ]

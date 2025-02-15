@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
-    # "django_pwa",  # Geçici olarak devre dışı bırakıldı
+    # "django_pwa",  # PWA desteği geçici olarak devre dışı
 ]
 
 MIDDLEWARE = [
@@ -139,26 +139,26 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# PWA Ayarları - Geçici olarak devre dışı bırakıldı
-# PWA_APP_NAME = 'Math Uygulaması'
-# PWA_APP_DESCRIPTION = "Matematik işlemleri alıştırma uygulaması"
-# PWA_APP_THEME_COLOR = '#6c5ce7'
-# PWA_APP_BACKGROUND_COLOR = '#121212'
-# PWA_APP_DISPLAY = 'standalone'
-# PWA_APP_SCOPE = '/'
-# PWA_APP_START_URL = '/'
-# PWA_APP_STATUS_BAR_COLOR = 'default'
-# PWA_APP_ICONS = [
-#     {
-#         'src': '/static/icons/icon-192x192.png',
-#         'sizes': '192x192',
-#         'type': 'image/png',
-#         'purpose': 'any maskable',
-#     },
-#     {
-#         'src': '/static/icons/icon-512x512.png',
-#         'sizes': '512x512',
-#         'type': 'image/png',
-#         'purpose': 'any maskable',
-#     }
-# ]
+# PWA Ayarları
+PWA_APP_NAME = 'Math Uygulaması'
+PWA_APP_DESCRIPTION = "Matematik işlemleri alıştırma uygulaması"
+PWA_APP_THEME_COLOR = '#6c5ce7'
+PWA_APP_BACKGROUND_COLOR = '#121212'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/icons/icon-192x192.png',
+        'sizes': '192x192',
+        'type': 'image/png',
+        'purpose': 'any maskable',
+    },
+    {
+        'src': '/static/icons/icon-512x512.png',
+        'sizes': '512x512',
+        'type': 'image/png',
+        'purpose': 'any maskable',
+    }
+]
