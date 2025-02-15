@@ -382,7 +382,7 @@ endblock %} {% block content %}
             if (!window.gameEnded) {
               getNewQuestion();
             }
-          }, 750);
+          }, 100);
         })
         .catch((error) => {
           console.error("Hata:", error);
