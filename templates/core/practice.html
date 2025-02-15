@@ -59,14 +59,15 @@
 
 <style>
   .calculator-container {
-    width: 100%;
+    width: 400px;
     padding: 20px;
     background: #1e1e2e;
     border-radius: 20px;
-    height: 100%;
+    margin: 0 auto;
   }
 
   .display-section {
+    width: 100%;
     background: #2d2d3f;
     border-radius: 15px;
     padding: 20px;
@@ -127,6 +128,11 @@
     cursor: default;
   }
 
+  .answer-input::placeholder {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
   .answer-input:focus {
     border-color: #5b4bd4;
     box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.3);
@@ -151,7 +157,7 @@
   .keypad {
     display: grid;
     gap: 15px;
-    max-width: 300px;
+    width: 100%;
     margin: 20px auto 0;
     background: #2d2d3f;
     padding: 20px;
@@ -333,7 +339,7 @@
             wrongCount++;
             document.getElementById("wrong-count").textContent = wrongCount;
             resultMessage.textContent =
-              "Yanlış! Doğru cevap: " + data.correct_answer;
+              "Yanlış!: " + data.correct_answer;
             resultMessage.style.color = "#f44336";
             answerInput.style.borderColor = "#f44336";
           }
