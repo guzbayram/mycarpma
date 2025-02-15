@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %} {% block title %}Çarpım Tablosu{% endblock %} 
+
 {% block content %}
 <div class="row g-4">
   <!-- Sol taraf - Ana Menü -->
@@ -241,6 +242,19 @@
     document
       .getElementById("startButton")
       .addEventListener("click", function () {
+        // İstatistikleri sıfırla
+        document.querySelectorAll(".stats-value").forEach((element, index) => {
+          if (index === 3) {
+            element.textContent = "%0";
+          } else {
+            element.textContent = "0";
+          }
+        });
+
+        // Oyun durumunu sıfırla
+        window.gameEnded = false;
+
+        // Yeni oturum başlat
         practiceInstance = initPractice(selectedOperation, selectedDuration);
       });
 

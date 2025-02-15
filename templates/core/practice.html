@@ -268,6 +268,36 @@
       if (window.timerInterval) {
         clearInterval(window.timerInterval);
       }
+      // Süre bittiğinde yeni soru göndermeyi durdur
+      window.gameEnded = true;
+      updateStats();
+    }
+
+    function updateStats() {
+      // Ana sayfadaki istatistikleri güncelle
+      const totalQuestions = correctCount + wrongCount;
+      const successRate =
+        totalQuestions > 0
+          ? Math.round((correctCount / totalQuestions) * 100)
+          : 0;
+
+      // İstatistik değerlerini güncelle
+      document.querySelectorAll(".stats-value").forEach((element, index) => {
+        switch (index) {
+          case 0: // Toplam Soru
+            element.textContent = totalQuestions;
+            break;
+          case 1: // Doğru
+            element.textContent = correctCount;
+            break;
+          case 2: // Yanlış
+            element.textContent = wrongCount;
+            break;
+          case 3: // Başarı Yüzdesi
+            element.textContent = `%${successRate}`;
+            break;
+        }
+      });
     }
 
     function getNewQuestion() {
@@ -338,20 +368,27 @@
           } else {
             wrongCount++;
             document.getElementById("wrong-count").textContent = wrongCount;
-            resultMessage.textContent =
-              "Yanlış!: " + data.correct_answer;
+            resultMessage.textContent = "Yanlış!: " + data.correct_answer;
             resultMessage.style.color = "#f44336";
             answerInput.style.borderColor = "#f44336";
           }
 
+          // Her cevaptan sonra istatistikleri güncelle
+          updateStats();
+
           setTimeout(() => {
             answerInput.style.borderColor = "#6c5ce7";
-            getNewQuestion();
-          }, 1500); // Süreyi biraz artırdık
+            // Sadece oyun bitmemişse yeni soru gönder
+            if (!window.gameEnded) {
+              getNewQuestion();
+            }
+          }, 1500);
         })
         .catch((error) => {
           console.error("Hata:", error);
-          getNewQuestion();
+          if (!window.gameEnded) {
+            getNewQuestion();
+          }
         });
     }
 
