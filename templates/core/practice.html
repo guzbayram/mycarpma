@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %} {% block title %}Alıştırma - Çarpım Tablosu 
-{% endblock %} {% block content %}
+
+{%endblock %} {% block content %}
 <div class="calculator-container">
   <div class="display-section">
     <div class="timer" id="timer"></div>
@@ -403,7 +404,7 @@
             if (!window.gameEnded) {
               getNewQuestion();
             }
-          }, 750);
+          }, 250);
         })
         .catch((error) => {
           console.error("Hata:", error);
