@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
-    # "django_pwa",  # PWA desteği geçici olarak devre dışı
+    "django_pwa",  # PWA desteği aktif
 ]
 
 MIDDLEWARE = [
