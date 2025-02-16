@@ -1,6 +1,28 @@
-Django==4.2.19  # Django web framework
-django-pwa==2.0.1  # Progressive Web App desteği
-python-dotenv==1.0.1  # Ortam değişkenleri için
-asgiref==3.8.1  # ASGI spesifikasyonu için
-sqlparse==0.5.3  # SQL ayrıştırma için
-typing-extensions==4.12.2  # Tip desteği için 
+# Web Framework
+Django==4.2.19
+
+# Progressive Web App Desteği
+django-pwa==2.0.1
+
+# Ortam Değişkenleri
+python-dotenv==1.0.1
+
+# Django Bağımlılıkları
+asgiref==3.8.1
+sqlparse==0.5.3
+typing-extensions==4.12.2
+
+# Güvenlik
+django-cors-headers==4.3.1
+
+# Geliştirme Araçları
+django-debug-toolbar==4.3.0
+
+# Test
+pytest==8.0.2
+pytest-django==4.8.0
+
+# Kod Kalitesi
+black==24.2.0
+flake8==7.0.0
+isort==5.13.2 
