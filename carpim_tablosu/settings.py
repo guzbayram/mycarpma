@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
-    "django_pwa",  # PWA desteği aktif
 ]
 
 MIDDLEWARE = [
@@ -59,10 +58,6 @@ MIDDLEWARE = [
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'http://192.168.1.101:8000']
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
-
-# CORS ayarları
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "carpim_tablosu.urls"
 
@@ -130,35 +125,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# PWA Ayarları
-PWA_APP_NAME = 'Math Uygulaması'
-PWA_APP_DESCRIPTION = "Matematik işlemleri alıştırma uygulaması"
-PWA_APP_THEME_COLOR = '#6c5ce7'
-PWA_APP_BACKGROUND_COLOR = '#121212'
-PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = '/'
-PWA_APP_START_URL = '/'
-PWA_APP_STATUS_BAR_COLOR = 'default'
-PWA_APP_ICONS = [
-    {
-        'src': '/static/icons/icon-192x192.png',
-        'sizes': '192x192',
-        'type': 'image/png',
-        'purpose': 'any maskable',
-    },
-    {
-        'src': '/static/icons/icon-512x512.png',
-        'sizes': '512x512',
-        'type': 'image/png',
-        'purpose': 'any maskable',
-    }
-]

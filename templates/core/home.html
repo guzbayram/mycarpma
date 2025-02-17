@@ -1,6 +1,5 @@
-{% extends 'core/base.html' %} {% block title %}Çarpım Tablosu{% endblock %} 
-
-{% block content %}
+{% extends 'core/base.html' %} {% block title %}Çarpım Tablosu{% endblock %}
+{%block content %}
 <div class="row g-4">
   <!-- Sol taraf - Ana Menü -->
   <div class="col-md-6">
@@ -31,19 +30,19 @@
 
         <div class="timer-section">
           <div class="timer-row">
-            <button class="timer-button" data-duration="0">
-              <i class="fas fa-infinity"></i>
-              <span>Süresiz</span>
-            </button>
-            <button class="timer-button active" data-duration="30">
+            <button class="timer-button" data-duration="30">
               <i class="fas fa-clock"></i>
               <span>30 Saniye</span>
             </button>
-          </div>
-          <div class="timer-row">
             <button class="timer-button" data-duration="60">
               <i class="fas fa-hourglass"></i>
               <span>60 Saniye</span>
+            </button>
+          </div>
+          <div class="timer-row">
+            <button class="timer-button" data-duration="0">
+              <i class="fas fa-infinity"></i>
+              <span>Süresiz</span>
             </button>
           </div>
         </div>
@@ -81,12 +80,17 @@
               </div>
             </div>
           </div>
+          <div class="button-row">
+            <button id="startButton" class="start-button">
+              <i class="fas fa-play"></i>
+              Oyunu Başlat
+            </button>
+            <button id="settingsButton" class="settings-button">
+              <i class="fas fa-cog"></i>
+              Ayarlar
+            </button>
+          </div>
         </div>
-
-        <button id="startButton" class="start-button">
-          <i class="fas fa-play"></i>
-          Oyunu Başlat
-        </button>
       </div>
     </div>
   </div>
@@ -98,25 +102,164 @@
     </div>
   </div>
 </div>
+
+<!-- Ayarlar Modal -->
+<div id="settingsModal" class="settings-modal">
+  <div class="settings-content">
+    <div class="settings-header">
+      <h2>Ayarlar</h2>
+      <button class="close-button">&times;</button>
+    </div>
+    <div class="settings-body">
+      <h3>Tema Seçimi</h3>
+      <div class="theme-options">
+        <button class="theme-button" data-theme="indigo">
+          <div class="color-preview indigo"></div>
+          <span>İndigo</span>
+        </button>
+        <button class="theme-button" data-theme="blue">
+          <div class="color-preview blue"></div>
+          <span>Mavi</span>
+        </button>
+        <button class="theme-button" data-theme="purple">
+          <div class="color-preview purple"></div>
+          <span>Mor</span>
+        </button>
+        <button class="theme-button" data-theme="green">
+          <div class="color-preview green"></div>
+          <span>Yeşil</span>
+        </button>
+        <button class="theme-button" data-theme="orange">
+          <div class="color-preview orange"></div>
+          <span>Turuncu</span>
+        </button>
+        <button class="theme-button" data-theme="red">
+          <div class="color-preview red"></div>
+          <span>Kırmızı</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %} {% block extra_css %}
 <style>
+  :root {
+    /* Varsayılan koyu tema - Modern İndigo */
+    --dark-bg: #1a1b2e;
+    --dark-surface: #252640;
+    --dark-surface-2: #2f3152;
+    --light-text: #ffffff;
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --success: #22c55e;
+    --error: #ef4444;
+    --timer-color: #4f46e5;
+  }
+
+  /* İndigo tema */
+  [data-theme="indigo"] {
+    --dark-bg: #1a1b2e;
+    --dark-surface: #252640;
+    --dark-surface-2: #2f3152;
+    --light-text: #ffffff;
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --success: #22c55e;
+    --error: #ef4444;
+  }
+
+  /* Mavi tema */
+  [data-theme="blue"] {
+    --dark-bg: #1a1b2e;
+    --dark-surface: #252640;
+    --dark-surface-2: #2f3152;
+    --light-text: #ffffff;
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --success: #22c55e;
+    --error: #ef4444;
+  }
+
+  /* Mor tema */
+  [data-theme="purple"] {
+    --dark-bg: #1a1b2e;
+    --dark-surface: #252640;
+    --dark-surface-2: #2f3152;
+    --light-text: #ffffff;
+    --primary: #a855f7;
+    --primary-dark: #9333ea;
+    --success: #22c55e;
+    --error: #ef4444;
+  }
+
+  /* Yeşil tema */
+  [data-theme="green"] {
+    --dark-bg: #1a1b2e;
+    --dark-surface: #252640;
+    --dark-surface-2: #2f3152;
+    --light-text: #ffffff;
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --success: #22c55e;
+    --error: #ef4444;
+  }
+
+  /* Turuncu tema */
+  [data-theme="orange"] {
+    --dark-bg: #1a1b2e;
+    --dark-surface: #252640;
+    --dark-surface-2: #2f3152;
+    --light-text: #ffffff;
+    --primary: #ff9500;
+    --primary-dark: #ff8000;
+    --success: #22c55e;
+    --error: #ef4444;
+  }
+
+  /* Kırmızı tema */
+  [data-theme="red"] {
+    --dark-bg: #1a1b2e;
+    --dark-surface: #252640;
+    --dark-surface-2: #2f3152;
+    --light-text: #ffffff;
+    --primary: #ef4444;
+    --primary-dark: #dc2626;
+    --success: #22c55e;
+    --error: #ef4444;
+  }
+
   .app-container {
-    max-width: 500px;
+    width: 80%;
     margin: 0 auto;
     padding: 20px;
   }
 
   .mode-grid {
-    background: #1e1e2e;
+    background: var(--dark-surface);
     border-radius: 20px;
     padding: 20px;
-    height: 100%;
+    height: 100%; /* Sabit yükseklik */
+    display: flex;
+    flex-direction: column;
   }
 
-  .mode-section,
-  .timer-section,
-  .stats-section {
+  .mode-section {
     margin-bottom: 25px;
+  }
+
+  .timer-section {
+    margin-top: 15px;
+    margin-bottom: 25px;
+  }
+
+  .stats-section {
+    margin-top: 15px;
+  }
+
+  .button-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 90px;
   }
 
   .mode-row,
@@ -131,6 +274,7 @@
   .timer-button {
     flex: 1;
     background: #2d2d3f;
+    /*background: var(--dark-surface-2);*/
     border-radius: 15px;
     padding: 15px;
     text-align: center;
@@ -147,7 +291,12 @@
 
   .mode-button.active,
   .timer-button.active {
-    background: #6c5ce7;
+    background: var(--primary);
+  }
+
+  .mode-button.active:hover,
+  .timer-button.active:hover {
+    background: var(--primary-dark);
   }
 
   .mode-button i,
@@ -158,6 +307,7 @@
   .stats-item {
     flex: 1;
     background: #2d2d3f;
+    /*background: var(--dark-surface-2);*/
     border-radius: 15px;
     padding: 15px;
     display: flex;
@@ -184,34 +334,170 @@
     opacity: 0.7;
   }
 
-  .start-button {
+  .start-button,
+  .settings-button {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: #6c5ce7;
-    color: white;
-    text-decoration: none;
     padding: 15px;
     border-radius: 15px;
     font-size: 18px;
     font-weight: bold;
     transition: all 0.3s ease;
     border: none;
-    width: 100%;
     cursor: pointer;
   }
 
-  .start-button:hover {
-    background: #5b4bd4;
+  .start-button {
+    background: var(--primary);
     color: white;
+  }
+
+  .start-button:hover {
+    background: var(--primary-dark);
+  }
+
+  .settings-button {
+    background: #2d2d3f;
+    color: white;
+  }
+
+  .settings-button:hover {
+    background: #3d3d4f;
+  }
+
+  .settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+  }
+
+  .settings-content {
+    position: relative;
+    background: var(--dark-surface);
+    margin: 10% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--dark-surface-2);
+  }
+
+  .settings-header h2 {
+    margin: 0;
+    color: var(--light-text);
+    font-size: 24px;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    color: var(--light-text);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s ease;
+  }
+
+  .close-button:hover {
+    color: var(--primary);
+  }
+
+  .settings-body h3 {
+    color: var(--light-text);
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .theme-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .theme-button {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: var(--dark-surface-2);
+    border: none;
+    border-radius: 12px;
+    color: var(--light-text);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .theme-button::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: var(--primary);
+    transition: all 0.3s ease;
+  }
+
+  .theme-button.active {
+    background: var(--primary);
+  }
+
+  .theme-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .color-preview {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  /* Tema renk önizlemeleri */
+  .color-preview.indigo {
+    background-color: #6366f1;
+  }
+  .color-preview.blue {
+    background-color: #3b82f6;
+  }
+  .color-preview.purple {
+    background-color: #a855f7;
+  }
+  .color-preview.green {
+    background-color: #10b981;
+  }
+  .color-preview.orange {
+    background-color: #ff9500;
+  }
+  .color-preview.red {
+    background-color: #ef4444;
   }
 </style>
 {% endblock %} {% block extra_js %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     let selectedOperation = "multiplication";
-    let selectedDuration = 30;
+    let selectedDuration = 0; // Varsayılan olarak süresiz mod
     let practiceInstance = null;
 
     // İşlem seçimi
@@ -222,7 +508,6 @@
           .forEach((b) => b.classList.remove("active"));
         this.classList.add("active");
         selectedOperation = this.dataset.operation;
-        // İşlem değiştiğinde yeni oturum başlatalım
         practiceInstance = initPractice(selectedOperation, selectedDuration);
       });
     });
@@ -230,13 +515,42 @@
     // Timer seçimi
     document.querySelectorAll(".timer-button").forEach((button) => {
       button.addEventListener("click", function () {
-        document
-          .querySelectorAll(".timer-button")
-          .forEach((b) => b.classList.remove("active"));
-        this.classList.add("active");
-        selectedDuration = parseInt(this.dataset.duration);
+        const duration = parseInt(this.dataset.duration);
+        const infiniteButton = document.querySelector(
+          '.timer-button[data-duration="0"]'
+        );
+
+        // Tüm butonlardan active sınıfını kaldır
+        document.querySelectorAll(".timer-button").forEach((b) => {
+          b.classList.remove("active");
+        });
+
+        // Süresiz mod butonundan not-active sınıfını kaldır
+        infiniteButton.classList.remove("not-active");
+
+        if (duration === 0) {
+          // Süresiz mod seçildiğinde
+          this.classList.add("active");
+          infiniteButton.classList.remove("not-active");
+        } else {
+          // 30 veya 60 saniye seçildiğinde
+          this.classList.add("active");
+          infiniteButton.classList.add("not-active");
+        }
+
+        selectedDuration = duration;
       });
     });
+
+    // Varsayılan olarak süresiz modu seç
+    const infiniteButton = document.querySelector(
+      '.timer-button[data-duration="0"]'
+    );
+    if (infiniteButton) {
+      infiniteButton.classList.add("active");
+      infiniteButton.classList.remove("not-active");
+      selectedDuration = 0;
+    }
 
     // Başlat butonu
     document
@@ -260,6 +574,57 @@
 
     // Sayfa yüklendiğinde ilk pratik oturumunu başlatalım
     practiceInstance = initPractice(selectedOperation, selectedDuration);
+
+    const settingsButton = document.getElementById("settingsButton");
+    const settingsModal = document.getElementById("settingsModal");
+    const closeButton = document.querySelector(".close-button");
+    const themeButtons = document.querySelectorAll(".theme-button");
+
+    // Modal kontrolü
+    settingsButton.addEventListener("click", () => {
+      settingsModal.style.display = "block";
+    });
+
+    closeButton.addEventListener("click", () => {
+      settingsModal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === settingsModal) {
+        settingsModal.style.display = "none";
+      }
+    });
+
+    // Tema değiştirme
+    themeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const theme = button.dataset.theme;
+        document.documentElement.setAttribute("data-theme", theme);
+
+        // Aktif tema butonunu güncelle
+        themeButtons.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        // Tema tercihini localStorage'a kaydet
+        localStorage.setItem("selectedTheme", theme);
+
+        // Modal'ı kapat
+        settingsModal.style.display = "none";
+      });
+    });
+
+    // Sayfa yüklendiğinde kaydedilmiş temayı uygula
+    const savedTheme = localStorage.getItem("selectedTheme");
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      themeButtons.forEach((btn) => {
+        if (btn.dataset.theme === savedTheme) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
   });
 </script>
 {% endblock %}
